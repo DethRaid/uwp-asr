@@ -23,37 +23,26 @@ namespace Task_Recognition {
     /// </summary>
     public sealed partial class MainPage : Page {
         private List<string> topicsList = new List<string>();
-        private SpeechRecognizer speechRecognizer = new SpeechRecognizer();
 
         public MainPage() {
             this.InitializeComponent();
-        }
-
-        private void setWords_Click(object sender, RoutedEventArgs e) {
-            buildGrammar();
-        }
-
-        private async void buildGrammar() {
-            var constraint = new SpeechRecognitionListConstraint(topicsList);
-
-            speechRecognizer = new SpeechRecognizer();
-            speechRecognizer.Constraints.Add(constraint);
-            await speechRecognizer.CompileConstraintsAsync();
-            SpeechRecognitionResult speechRecognitionResult = await speechRecognizer.RecognizeWithUIAsync();
-            await speechRecognizer.RecognizeWithUIAsync();
-            var messageDialog = new Windows.UI.Popups.MessageDialog(speechRecognitionResult.Text, "Text spoken");
-            await messageDialog.ShowAsync();
         }
 
         private void availableTopics_TextChanged(object sender, TextChangedEventArgs e) {
             var box = sender as TextBox;
             Debug.WriteLine(box.Text);
             var text = box.Text;
+            topicsList.Clear();
             topicsList.AddRange(text.Split(','));
         }
 
         private void topics_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
+        }
+
+        private void setWords_Click(object sender, RoutedEventArgs e) {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(RecognizerPage), topicsList);
         }
     }
 }
