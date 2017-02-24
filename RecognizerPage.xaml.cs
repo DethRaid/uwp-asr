@@ -87,6 +87,12 @@ namespace Task_Recognition {
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     var recognizedText = args.Hypothesis.Text;
                     var listItem = topicBoxes[recognizedText];
+
+                    listBox.Items.Remove(listItem);
+
+                    if(listBox.Items.Count == 0) {
+                        successMessage.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    }
                 });
             }
         }
