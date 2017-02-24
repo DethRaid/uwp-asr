@@ -9,8 +9,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button x:Name="setWords" Content="Set Words" HorizontalAlignment="Left" Margin="477,597,0,0" VerticalAlignment="Top" Click="setWords_Click"/>
-        <TextBox x:Name="availableTopics" HorizontalAlignment="Center" Margin="10,10,764,572" TextWrapping="Wrap" Text="Input topics to recognize" VerticalAlignment="Center" TextChanged="availableTopics_TextChanged" Height="58" Width="250"/>
-        <ListView x:Name="topics" HorizontalAlignment="Left" Height="360" Margin="724,10,0,0" VerticalAlignment="Top" Width="290" SelectionChanged="topics_SelectionChanged"/>
+        <RichEditBox HorizontalAlignment="Left" Margin="263,231,0,0" VerticalAlignment="Top" Height="187" Width="250" TextChanged="RichEditBox_TextChanged"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="263,180,0,0" TextWrapping="Wrap" Text="Enter a list of topics you want to recognize, one topic per line" VerticalAlignment="Top" Width="250" Height="46"/>
 
     </Grid>
 </Page>

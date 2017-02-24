@@ -16,33 +16,37 @@ namespace Task_Recognition {
         private SpeechRecognizer speechRecognizer;
         private CoreDispatcher dispatcher;
         private List<string> topicsList;
+        private Dictionary<string, RichEditBox> topicBoxes;
 
         public RecognizerPage() {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
             topicsList = e.Parameter as List<string>;
             Debug.WriteLine("Recognizing topics:");
-            topicsList.ForEach(x => Debug.WriteLine(x));
 
-            dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+            topicBoxes = new Dictionary<string, RichEditBox>();
+
+            topicsList.ForEach(topic => {
+                Debug.WriteLine(topic);
+                RichEditBox item = new RichEditBox();
+                item.Document.SetText(Windows.UI.Text.TextSetOptions.None, topic);
+
+                listBox.Items.Add(item);
+                topicBoxes.Add(topic, item);
+            });
+
+            dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 
             var constraint = new SpeechRecognitionListConstraint(topicsList);
 
             speechRecognizer = new SpeechRecognizer();
             speechRecognizer.Constraints.Add(constraint);
             var speechCompilationResult = await speechRecognizer.CompileConstraintsAsync();
-            Debug.WriteLine("Created Speech Recognition stuff");
-
             speechRecognizer.ContinuousRecognitionSession.ResultGenerated += speechResultCallback;
-            Debug.WriteLine("Registered speech callback");
-
             speechRecognizer.ContinuousRecognitionSession.Completed += speechSessionCompletedCallback;
-            Debug.WriteLine("Registered session ended callback");
-
             speechRecognizer.HypothesisGenerated += hypothesisGeneratedCallback;
-            Debug.WriteLine("Registered hypothesis callback");
 
             if(speechRecognizer.State == SpeechRecognizerState.Idle) {
                 await speechRecognizer.ContinuousRecognitionSession.StartAsync();
@@ -55,20 +59,36 @@ namespace Task_Recognition {
         }
 
         private async void speechResultCallback(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
-            Debug.WriteLine("Recognized some text");
-            if(args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
-                var recognizedText = args.Result.Text;
-                Debug.WriteLine("Recognized word " + recognizedText);
+            if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    var recognizedText = args.Result.Text;
+                    Debug.WriteLine("Recognized word '" + recognizedText + "'");
 
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Debug.WriteLine("Recognized word " + args.Result.Text));
+                    foreach (var x in listBox.Items) {
+                        var item = x as RichEditBox;
+                        var textInItem = "";
+                        item.Document.GetText(Windows.UI.Text.TextGetOptions.None, out textInItem);
+                        Debug.WriteLine("Text box has text " + textInItem);
+                        if (textInItem == recognizedText) {
+                            Debug.WriteLine("Recognized a word on our list!");
+                        }
+                    }
+                });
 
             } else {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Debug.WriteLine("Recognized word " + args.Result.Text));
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Debug.WriteLine("Recognized word '" + args.Result.Text + "' with a low confidence"));
             }
         }
 
-        private void hypothesisGeneratedCallback(SpeechRecognizer sender, SpeechRecognitionHypothesisGeneratedEventArgs args) {
+        private async void hypothesisGeneratedCallback(SpeechRecognizer sender, SpeechRecognitionHypothesisGeneratedEventArgs args) {
             Debug.WriteLine("Recieved speech hypothesis " + args.Hypothesis.Text);
+
+            if(args.Hypothesis.Text != "...") { 
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    var recognizedText = args.Hypothesis.Text;
+                    var listItem = topicBoxes[recognizedText];
+                });
+            }
         }
     }
 }
