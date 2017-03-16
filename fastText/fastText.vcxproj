@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{40AA4D73-7A20-491D-874D-7EE47E859791}</ProjectGuid>
+    <ProjectGuid>{305C69B5-E614-4336-B912-C00161D8C780}</ProjectGuid>
     <RootNamespace>fastText</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
