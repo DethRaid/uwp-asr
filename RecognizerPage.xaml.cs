@@ -15,7 +15,7 @@ namespace Task_Recognition {
     public sealed partial class RecognizerPage : Page {
         private SpeechRecognizer speechRecognizer;
         private CoreDispatcher dispatcher;
-        private List<string> topicsList;
+        private HashSet<string> topicsList;
         private Dictionary<string, RichEditBox> topicBoxes;
 
         public RecognizerPage() {
@@ -23,19 +23,25 @@ namespace Task_Recognition {
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
-            topicsList = e.Parameter as List<string>;
+            topicsList = e.Parameter as HashSet<string>;
             Debug.WriteLine("Recognizing topics:");
 
             topicBoxes = new Dictionary<string, RichEditBox>();
 
-            topicsList.ForEach(topic => {
+            var totalHeight = 0.0;
+
+            foreach(var topic in topicsList) {
                 Debug.WriteLine(topic);
-                RichEditBox item = new RichEditBox();
+                var item = new RichEditBox();
                 item.Document.SetText(Windows.UI.Text.TextSetOptions.None, topic);
+                item.Width = listBox.Width - 20;
+                totalHeight += item.ActualHeight;
 
                 listBox.Items.Add(item);
-                topicBoxes.Add(topic, item);
-            });
+                topicBoxes[topic] = item;
+            }
+
+            listBox.Height = totalHeight;
 
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 

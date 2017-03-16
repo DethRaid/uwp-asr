@@ -19,7 +19,7 @@ namespace Task_Recognition
 
         private void setWords_Click(object sender, RoutedEventArgs e) {
             Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame.Navigate(typeof(RecognizerPage), topicsList);
+            rootFrame.Navigate(typeof(RecognizerPage), new HashSet<string>(topicsList));
         }
 
         private void RichEditBox_TextChanged(System.Object sender, RoutedEventArgs e) {
