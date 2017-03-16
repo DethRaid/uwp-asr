@@ -6,9 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+<<<<<<< HEAD
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">        
         <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="340" Margin="0,0,0,0" VerticalAlignment="Top" Width="308"/>
+=======
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="340" Margin="10,45,0,0" VerticalAlignment="Top" Width="340"/>
+        <TextBlock x:Name="topicsTitle" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Topics you still need to mention" VerticalAlignment="Top" Height="30" Width="340" FontSize="22" TextAlignment="Center"/>
+        <TextBlock x:Name="successMessage" HorizontalAlignment="Left" Margin="10,390,0,0" TextWrapping="Wrap" Text="You mentioned all the topics!" VerticalAlignment="Top" Height="123" Width="340" FontSize="22" TextAlignment="Center" Visibility="Collapsed"/>
+>>>>>>> 19294d71728b7c2ebf393dce11ddb7b2aa7f3f61
 
     </Grid>
 </Page>
