@@ -8,8 +8,15 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="340" Margin="0,0,0,0" VerticalAlignment="Top" Width="340"/>
         <TextBlock x:Name="topicsTitle" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Topics you still need to mention" VerticalAlignment="Top" Height="30" Width="340" FontSize="22" TextAlignment="Center"/>
         <TextBlock x:Name="successMessage" HorizontalAlignment="Left" Margin="10,390,0,0" TextWrapping="Wrap" Text="You mentioned all the topics!" VerticalAlignment="Top" Height="123" Width="340" FontSize="22" TextAlignment="Center" Visibility="Collapsed"/>
+        <ListView x:Name="listView" HorizontalAlignment="Left" Height="527" Margin="10,45,0,0" VerticalAlignment="Top" Width="340">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <CheckBox x:Name="checkBox" Content="{x:Bind}" HorizontalAlignment="Left" Margin="99,86,0,0" VerticalAlignment="Top"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button x:Name="button" Content="+" HorizontalAlignment="Left" Margin="10,577,0,0" VerticalAlignment="Top" Width="340" Height="53" Click="button_Click"/>
     </Grid>
 </Page>

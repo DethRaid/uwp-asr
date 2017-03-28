@@ -30,18 +30,7 @@ namespace Task_Recognition {
 
             var totalHeight = 0.0;
 
-            foreach(var topic in topicsList) {
-                Debug.WriteLine(topic);
-                var item = new RichEditBox();
-                item.Document.SetText(Windows.UI.Text.TextSetOptions.None, topic);
-                item.Width = listBox.Width - 20;
-                totalHeight += item.ActualHeight;
-
-                listBox.Items.Add(item);
-                topicBoxes[topic] = item;
-            }
-
-            listBox.Height = totalHeight;
+            listView.ItemsSource = topicsList;
 
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 
@@ -70,7 +59,7 @@ namespace Task_Recognition {
                     var recognizedText = args.Result.Text;
                     Debug.WriteLine("Recognized word '" + recognizedText + "'");
 
-                    foreach (var x in listBox.Items) {
+                    foreach (var x in listView.Items) {
                         var item = x as RichEditBox;
                         var textInItem = "";
                         item.Document.GetText(Windows.UI.Text.TextGetOptions.None, out textInItem);
@@ -94,13 +83,17 @@ namespace Task_Recognition {
                     var recognizedText = args.Hypothesis.Text;
                     var listItem = topicBoxes[recognizedText];
 
-                    listBox.Items.Remove(listItem);
+                    listView.Items.Remove(listItem);
 
-                    if(listBox.Items.Count == 0) {
+                    if(listView.Items.Count == 0) {
                         successMessage.Visibility = Windows.UI.Xaml.Visibility.Visible;
                     }
                 });
             }
+        }
+
+        private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            // TODO: Open the "enter a new topic" thing
         }
     }
 }

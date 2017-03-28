@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task Recognition", "Task Recognition.csproj", "{56048296-D829-43CA-982C-B8743A468DAF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastText", "..\FastText\FastText.vcxproj", "{0A40B65E-08ED-43F2-952C-56D971735E88}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -35,18 +33,6 @@ Global
 		{56048296-D829-43CA-982C-B8743A468DAF}.Release|x86.ActiveCfg = Release|x86
 		{56048296-D829-43CA-982C-B8743A468DAF}.Release|x86.Build.0 = Release|x86
 		{56048296-D829-43CA-982C-B8743A468DAF}.Release|x86.Deploy.0 = Release|x86
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|ARM.ActiveCfg = Debug|ARM
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|ARM.Build.0 = Debug|ARM
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|x64.ActiveCfg = Debug|x64
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|x64.Build.0 = Debug|x64
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|x86.ActiveCfg = Debug|Win32
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Debug|x86.Build.0 = Debug|Win32
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|ARM.ActiveCfg = Release|ARM
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|ARM.Build.0 = Release|ARM
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|x64.ActiveCfg = Release|x64
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|x64.Build.0 = Release|x64
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|x86.ActiveCfg = Release|Win32
-		{0A40B65E-08ED-43F2-952C-56D971735E88}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
