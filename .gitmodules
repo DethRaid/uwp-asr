@@ -1,3 +1,6 @@
 [submodule "fastText/src"]
 	path = fastText/src
 	url = https://github.com/DethRaid/fastText.git
+[submodule "Word2vec.Tools"]
+	path = Word2vec.Tools
+	url = https://github.com/tmteam/Word2vec.Tools.git

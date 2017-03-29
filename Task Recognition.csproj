@@ -95,6 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InputTopicPage.xaml.cs">
+      <DependentUpon>InputTopicPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -102,6 +105,16 @@
     <Compile Include="RecognizerPage.xaml.cs">
       <DependentUpon>RecognizerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="word2vec\DistanceTo.cs" />
+    <Compile Include="word2vec\IWord2VecReader.cs" />
+    <Compile Include="word2vec\LinkedDistance.cs" />
+    <Compile Include="word2vec\Representation.cs" />
+    <Compile Include="word2vec\TheHelper.cs" />
+    <Compile Include="word2vec\Vocabulary.cs" />
+    <Compile Include="word2vec\Word2VecBinaryReader.cs" />
+    <Compile Include="word2vec\Word2VecTextReader.cs" />
+    <Compile Include="word2vec\WordDistance.cs" />
+    <Compile Include="word2vec\WordRepresentation.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -124,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="InputTopicPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

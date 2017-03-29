@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="Task_Recognition.InputTopicPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Task_Recognition"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Enter the topic you want to talk about" VerticalAlignment="Top" Height="65" Width="340" FontSize="22"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,240,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="94" Width="340"/>
+        <Button x:Name="saveButton" Content="Save Topic" HorizontalAlignment="Left" Margin="10,339,0,0" VerticalAlignment="Top" Width="130"/>
+        <Button x:Name="saveAndAddAnother" Content="Save Topic and Add Another" HorizontalAlignment="Left" Margin="145,339,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Page>
