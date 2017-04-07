@@ -1,32 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Word2vec.Tools;
 
 namespace Task_Recognition {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application {
+        private HashSet<string> topicsList = new HashSet<string>();
+        private List<string> keywords = new List<string>();
+
+        private bool embeddingsAvailable = false;
+
+        /// <summary>
+        /// Maps from keyword to the topic that the keyword is associated with
+        /// </summary>
+        private Dictionary<string, string> keywordMapping = new Dictionary<string, string>();
+
+        private Task<Vocabulary> vocabLoader;
+
+        internal Task setTopicsList(HashSet<string> topicsList) {
+            this.topicsList = topicsList;
+
+            return new Task(() => {
+                foreach(var topic in this.topicsList) {
+                    addTopic(topic);
+                }
+            });
+        }
+
+        internal HashSet<string> getTopicsList() {
+            return topicsList;
+        }
+
+        internal Dictionary<string, string> getKeywordMapping() {
+            return keywordMapping;
+        }
+
+        /// <summary>
+        /// Retrieves all the keywords that the system should process. Also generates the mapping from keyword to 
+        /// topic so that topic recognition can work
+        /// </summary>
+        /// <returns>A list of all the keywords that we should recognize</returns>
+        internal List<string> getKeywords() {
+            return keywords;
+        }
+
+        internal void addTopic(string topic) {
+            topicsList.Add(topic);
+            keywordMapping[topic] = topic;
+            keywords.Add(topic);
+
+            if(embeddingsAvailable) {
+                var vocab = vocabLoader.Result;
+                var closeWords = vocab.Distance(topic, 5);
+                foreach(var closeWord in closeWords) {
+                    keywords.Add(closeWord.Representation.WordOrNull);
+                    keywordMapping[closeWord.Representation.WordOrNull] = topic;
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App() {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
+
+            loadEmbeddingsFile();
+        }
+
+        /// <summary>
+        /// Loads the enbeddings file from disk
+        /// </summary>
+        /// If the file cannot be loaded, this method sets the 'embeddingsAvailable' instance variable to false, which 
+        /// tells the app to not try and use any fancy word embedding-related code
+        private void loadEmbeddingsFile() {
+            vocabLoader = Task.Factory.StartNew(() => {
+                try {
+                    var embeddingsFile = StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/en-US-embeddings.bin", UriKind.Absolute));
+                    var embeddingsStream = embeddingsFile.GetResults().OpenStreamForReadAsync().Result;
+                    embeddingsAvailable = true;
+                    return new Word2VecBinaryReader().Read(embeddingsStream);
+                } catch(Exception e) {
+                    embeddingsAvailable = false;
+                    return null;
+                }
+            });
         }
 
         /// <summary>
@@ -63,7 +133,7 @@ namespace Task_Recognition {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(RecognizerPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

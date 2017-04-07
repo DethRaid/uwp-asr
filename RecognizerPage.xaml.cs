@@ -1,74 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Windows.Media.SpeechRecognition;
-using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Word2vec.Tools;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Task_Recognition {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Implements functionality for the page that recognizes topics
     /// </summary>
     public sealed partial class RecognizerPage : Page {
-        public class InitParams {
-            public Task<Vocabulary> vocabLoadingTask;
-            public HashSet<string> topicsList;
-
-            public InitParams(Task<Vocabulary> vocabLoadingTask, HashSet<string> topicsList) {
-                this.vocabLoadingTask = vocabLoadingTask;
-                this.topicsList = topicsList;
-            }
-        }
-
         private SpeechRecognizer speechRecognizer;
         private CoreDispatcher dispatcher;
-        private HashSet<string> topicsList;
-        private Dictionary<string, RichEditBox> topicBoxes;
-        private Dictionary<string, string> keywordsForTopic = new Dictionary<string, string>();
-        private Vocabulary vocab;
+        private App app;
 
         public RecognizerPage() {
             InitializeComponent();
         }
+        
+        protected override void OnNavigatedTo(NavigationEventArgs e) {
+            Debug.WriteLine("Navageted to page");
+            app = Application.Current as App;
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e) {
-            var initParams = e.Parameter as InitParams;
-            topicsList = initParams.topicsList;
-            //vocab = initParams.vocabLoadingTask.Result;
-
-            listView.ItemsSource = topicsList;
+            listView.ItemsSource = app.getTopicsList();
 
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 
-            var keywords = new List<string>();
-            foreach(var topic in topicsList) {
-                keywordsForTopic[topic] = topic;
-                keywords.Add(topic);
-
-                /*var closeWords = vocab.Distance(topic, 5);
-                foreach(var closeWord in closeWords) {
-                    keywords.Add(closeWord.Representation.WordOrNull);
-                    keywordsForTopic[closeWord.Representation.WordOrNull] = topic;
-                }*/
+            if(app.getKeywords().Count > 0) {   // The speech recognition stuff likes to throw exceptions if you give it an empty list
+                startSpeechRecognition();
             }
+        }
 
-            Debug.WriteLine("List of keywords to recognize: " + keywords);
+        /// <summary>
+        /// Starts a speech recognition session that can recognize the topics on the checklist and possibly related words, if that functionality is available
+        /// </summary>
+        /// Also adds the right callbacks to the speech recognizer
+        private async void startSpeechRecognition() {
+            var constraint = new SpeechRecognitionListConstraint(app.getKeywords());
 
-            var constraint = new SpeechRecognitionListConstraint(keywords);
+            if(speechRecognizer?.State == SpeechRecognizerState.Capturing) {
+                await speechRecognizer.ContinuousRecognitionSession.StopAsync();
+            }
 
             speechRecognizer = new SpeechRecognizer();
             speechRecognizer.Constraints.Add(constraint);
             var speechCompilationResult = await speechRecognizer.CompileConstraintsAsync();
             speechRecognizer.ContinuousRecognitionSession.ResultGenerated += speechResultCallback;
-            speechRecognizer.ContinuousRecognitionSession.Completed += speechSessionCompletedCallback;
-            speechRecognizer.HypothesisGenerated += hypothesisGeneratedCallback;
 
             if(speechRecognizer.State == SpeechRecognizerState.Idle) {
                 await speechRecognizer.ContinuousRecognitionSession.StartAsync();
@@ -76,28 +56,15 @@ namespace Task_Recognition {
             }
         }
 
-        private void speechSessionCompletedCallback(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
-            Debug.WriteLine("Speech recognition session ended. Status: " + args.Status);
-        }
-
         private async void speechResultCallback(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
-            if (args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
+            if(args.Result.Confidence == SpeechRecognitionConfidence.Medium || args.Result.Confidence == SpeechRecognitionConfidence.High) {
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     var recognizedText = args.Result.Text;
-                    Debug.WriteLine("Recognized word '" + recognizedText + "'");
+                    var keywordMapping = app.getKeywordMapping();
+                    var topic = keywordMapping[recognizedText];
+                    Debug.WriteLine("Recognized text " + recognizedText + " from topic " + topic);
 
-                    var topic = keywordsForTopic[recognizedText];
-                    Debug.WriteLine("That word maps to topic " + topic);
-
-                    foreach (var x in listView.Items) {
-                        var item = x as RichEditBox;
-                        var textInItem = "";
-                        item.Document.GetText(Windows.UI.Text.TextGetOptions.None, out textInItem);
-                        Debug.WriteLine("Text box has text " + textInItem);
-                        if (textInItem == topic) {
-                            Debug.WriteLine("Recognized a word on our list!");
-                        }
-                    }
+                    checkMatchingTopics(topic);
                 });
 
             } else {
@@ -105,34 +72,25 @@ namespace Task_Recognition {
             }
         }
 
-        private async void hypothesisGeneratedCallback(SpeechRecognizer sender, SpeechRecognitionHypothesisGeneratedEventArgs args) {
-            Debug.WriteLine("Recieved speech hypothesis " + args.Hypothesis.Text);
-
-            if(args.Hypothesis.Text != "...") { 
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    var recognizedText = args.Hypothesis.Text;
-                    var listItem = topicBoxes[recognizedText];
-
-                    listView.Items.Remove(listItem);
-
-                    if(listView.Items.Count == 0) {
-                        successMessage.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                    }
-                });
+        /// <summary>
+        /// Examines all the checklist items in the UI, checking off any that match the given topic
+        /// </summary>
+        /// <param name="topic">The topic to check CheckBoxes for</param>
+        private void checkMatchingTopics(string topic) {
+            foreach(var x in listView.Items) {
+                var item = x as CheckBox;
+                var textInItem = (string)item.Content;
+                Debug.WriteLine("Text box has text " + textInItem);
+                if(textInItem == topic) {
+                    Debug.WriteLine("Recognized a word on our list!");
+                    item.IsChecked = true;
+                }
             }
         }
 
-        private async void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
-            // TODO: Open the "enter a new topic" thing
-            var speechRecognizer = new SpeechRecognizer();
-            await speechRecognizer.CompileConstraintsAsync();
-            try {
-                var speechRecognitionResult = await speechRecognizer.RecognizeWithUIAsync();
-                var messageDialogue = new MessageDialog(speechRecognitionResult.Text, "Text Spoken");
-                await messageDialogue.ShowAsync();
-            } catch(InvalidOperationException exception) {
-                await Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-accounts"));
-            }
+        private void button_Click(object sender, RoutedEventArgs e) {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(InputSingleTopicPage));
         }
     }
 }

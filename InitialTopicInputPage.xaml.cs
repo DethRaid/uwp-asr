@@ -12,30 +12,27 @@ namespace Task_Recognition {
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page {
-        private List<string> topicsList = new List<string>();
-
-        private Task<Vocabulary> vocabLoadingTask;
-
         public MainPage() {
             InitializeComponent();
-            //vocabLoadingTask = Task.Factory.StartNew<Vocabulary>(() => new Word2VecBinaryReader().Read("model.bin"));
         }
 
         private void setWords_Click(object sender, RoutedEventArgs e) {
             Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame.Navigate(typeof(RecognizerPage), new RecognizerPage.InitParams(vocabLoadingTask, new HashSet<string>(topicsList)));
+            rootFrame.Navigate(typeof(RecognizerPage));
         }
 
-        private void RichEditBox_TextChanged(System.Object sender, RoutedEventArgs e) {
+        private void RichEditBox_TextChanged(object sender, RoutedEventArgs e) {
             var box = sender as RichEditBox;
             Debug.WriteLine(box.Document);
             string text = "";
             box.Document.GetText(Windows.UI.Text.TextGetOptions.UseObjectText, out text);
-            topicsList.Clear();
 
+            var topicsList = new HashSet<string> ();
             foreach(string s in text.Split()) {
                 topicsList.Add(s.Trim());
             }
+
+            (Application.Current as App).setTopicsList(topicsList);
         }
     }
 }

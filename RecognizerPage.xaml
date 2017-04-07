@@ -13,10 +13,10 @@
         <ListView x:Name="listView" HorizontalAlignment="Left" Height="527" Margin="10,45,0,0" VerticalAlignment="Top" Width="340">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <CheckBox x:Name="checkBox" Content="{x:Bind}" HorizontalAlignment="Left" Margin="99,86,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="checkBox_template" Content="{x:Bind}" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="button" Content="+" HorizontalAlignment="Left" Margin="10,577,0,0" VerticalAlignment="Top" Width="340" Height="53" Click="button_Click"/>
+        <Button x:Name="button" Content="Add new topic" HorizontalAlignment="Left" Margin="10,577,0,0" VerticalAlignment="Top" Width="340" Height="53" Click="button_Click" FontSize="22"/>
     </Grid>
 </Page>
