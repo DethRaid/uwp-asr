@@ -96,7 +96,7 @@ namespace Task_Recognition {
             }
         }
 
-        private void button_Click(object sender, RoutedEventArgs e) {
+        private void addTopicButton_Click(object sender, RoutedEventArgs e) {
             Frame rootFrame = Window.Current.Content as Frame;
             rootFrame.Navigate(typeof(InputSingleTopicPage));
         }
@@ -105,6 +105,12 @@ namespace Task_Recognition {
             Debug.WriteLine("Clicked on item " + e.ClickedItem);
             var itemText = (string)(e.ClickedItem as CheckBox).Content;
             checkCheckboxWithContent(itemText, true);
+        }
+
+        private void clearSelectedButton_Click(object sender, RoutedEventArgs e) {
+            foreach(var item in topicsChecklist.Items) {
+                (item as CheckBox).IsChecked = false;
+            }
         }
     }
 }
