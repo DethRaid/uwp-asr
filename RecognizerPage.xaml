@@ -10,10 +10,10 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="topicsTitle" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Topics you still need to mention" VerticalAlignment="Top" Height="30" Width="340" FontSize="22" TextAlignment="Center"/>
         <TextBlock x:Name="successMessage" HorizontalAlignment="Left" Margin="10,390,0,0" TextWrapping="Wrap" Text="You mentioned all the topics!" VerticalAlignment="Top" Height="123" Width="340" FontSize="22" TextAlignment="Center" Visibility="Collapsed"/>
-        <ListView x:Name="topicsChecklist" HorizontalAlignment="Left" Height="468" Margin="10,45,0,0" VerticalAlignment="Top" Width="340" ItemClick="topicsChecklist_ItemClick" IsItemClickEnabled="True">
+        <ListView x:Name="topicsChecklist" HorizontalAlignment="Left" Height="241" Margin="10,45,0,0" VerticalAlignment="Top" Width="340" ItemClick="topicsChecklist_ItemClick" IsItemClickEnabled="True">
 
         </ListView>
-        <Button x:Name="addTopicButton" Content="Add new topic" HorizontalAlignment="Right" Margin="0,577,10,0" VerticalAlignment="Top" Width="149" Height="53" Click="addTopicButton_Click" FontSize="18"/>
-        <Button x:Name="clearSelectedButton" Content="Clear checked topics" HorizontalAlignment="Left" Margin="10,577,0,0" VerticalAlignment="Top" Width="186" Height="53" FontSize="18" Click="clearSelectedButton_Click"/>
+        <Button x:Name="addTopicButton" Content="Add new topic" HorizontalAlignment="Left" Margin="190,291,0,0" VerticalAlignment="Top" Width="160" Height="53" Click="addTopicButton_Click" FontSize="18"/>
+        <Button x:Name="clearSelectedButton" Content="Clear checked topics" HorizontalAlignment="Left" Margin="10,291,0,0" VerticalAlignment="Top" Width="175" Height="53" FontSize="18" Click="clearSelectedButton_Click"/>
     </Grid>
 </Page>
