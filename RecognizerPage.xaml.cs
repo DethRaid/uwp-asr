@@ -25,7 +25,11 @@ namespace Task_Recognition {
             Debug.WriteLine("Navageted to page");
             app = Application.Current as App;
 
-            listView.ItemsSource = app.getTopicsList();
+            foreach(var topic in app.getTopicsList()) {
+                CheckBox box = new CheckBox();
+                box.Content = topic;
+                topicsChecklist.Items.Add(box);
+            }
 
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 
@@ -64,7 +68,7 @@ namespace Task_Recognition {
                     var topic = keywordMapping[recognizedText];
                     Debug.WriteLine("Recognized text " + recognizedText + " from topic " + topic);
 
-                    checkMatchingTopics(topic);
+                    checkCheckboxWithContent(topic);
                 });
 
             } else {
@@ -76,14 +80,18 @@ namespace Task_Recognition {
         /// Examines all the checklist items in the UI, checking off any that match the given topic
         /// </summary>
         /// <param name="topic">The topic to check CheckBoxes for</param>
-        private void checkMatchingTopics(string topic) {
-            foreach(var x in listView.Items) {
+        /// <param name="toggle">If true, toggle the CheckBox. If false, set the CheckBox to checked</param>
+        private void checkCheckboxWithContent(string topic, bool toggle = false) {
+            foreach(var x in topicsChecklist.Items) {
                 var item = x as CheckBox;
                 var textInItem = (string)item.Content;
-                Debug.WriteLine("Text box has text " + textInItem);
+
                 if(textInItem == topic) {
-                    Debug.WriteLine("Recognized a word on our list!");
-                    item.IsChecked = true;
+                    if(toggle) {
+                        item.IsChecked = !item.IsChecked;
+                    } else {
+                        item.IsChecked = true;
+                    }
                 }
             }
         }
@@ -91,6 +99,12 @@ namespace Task_Recognition {
         private void button_Click(object sender, RoutedEventArgs e) {
             Frame rootFrame = Window.Current.Content as Frame;
             rootFrame.Navigate(typeof(InputSingleTopicPage));
+        }
+
+        private void topicsChecklist_ItemClick(object sender, ItemClickEventArgs e) {
+            Debug.WriteLine("Clicked on item " + e.ClickedItem);
+            var itemText = (string)(e.ClickedItem as CheckBox).Content;
+            checkCheckboxWithContent(itemText, true);
         }
     }
 }

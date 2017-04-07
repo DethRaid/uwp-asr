@@ -18,6 +18,10 @@ namespace Task_Recognition {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Starts the Speech Recognition session 
+        /// </summary>
+        /// <param name="e"></param>
         protected override async void OnNavigatedTo(NavigationEventArgs e) {
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher;
 
@@ -26,12 +30,14 @@ namespace Task_Recognition {
 
             speechRecognizer.HypothesisGenerated += speechHypothesisCallback;
             speechRecognizer.StateChanged += onSpeechRecognitionEnded;
-            //speechRecognizer.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(3);
-            //speechRecognizer.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(0.5);
 
             await speechRecognizer.RecognizeAsync();
         }
 
+        /// <summary>
+        /// If the speech recognition session is idle, stops the session
+        /// </summary>
+        /// <param name="e"></param>
         protected async override void OnNavigatedFrom(NavigationEventArgs e) {
             base.OnNavigatedFrom(e);
 
@@ -39,6 +45,7 @@ namespace Task_Recognition {
                 Debug.WriteLine("Ending speech recognition session because page was navigated away from");
                 await speechRecognizer.StopRecognitionAsync();
             }
+            Debug.WriteLine("Leaving the Input Topic Page");
         }
 
         private async void speechHypothesisCallback(SpeechRecognizer sender, SpeechRecognitionHypothesisGeneratedEventArgs args) {
@@ -65,11 +72,22 @@ namespace Task_Recognition {
             rootFrame.Navigate(typeof(InputSingleTopicPage));
         }
 
+        /// <summary>
+        /// Adds the text from the topic input field to the list of topics to be recognized
+        /// </summary>
+        /// If the topic field is blank, this method does not add the topic because empty strings make UWP Speech Recognition cry
         private void addCurrentTopic() {
             var topic = spokenText.Text;
 
-            var app = Application.Current as App;
-            app.addTopic(topic);
+            if(topic.Length > 0) {
+                var app = Application.Current as App;
+                app.addTopic(topic);
+            }
+        }
+
+        private void backToChecklistButton_Click(object sender, RoutedEventArgs e) {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(RecognizerPage));
         }
     }
 }
