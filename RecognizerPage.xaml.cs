@@ -35,6 +35,8 @@ namespace Task_Recognition {
 
             if(app.getKeywords().Count > 0) {   // The speech recognition stuff likes to throw exceptions if you give it an empty list
                 startSpeechRecognition();
+            } else {
+                Debug.WriteLine("No keywords provided");
             }
         }
 
@@ -57,6 +59,10 @@ namespace Task_Recognition {
             if(speechRecognizer.State == SpeechRecognizerState.Idle) {
                 await speechRecognizer.ContinuousRecognitionSession.StartAsync();
                 Debug.WriteLine("Started speech recognition session");
+            } else {
+                Debug.WriteLine("Speech recognizer is not idle, attemptint to reboot");
+                await speechRecognizer.ContinuousRecognitionSession.StopAsync();
+                await speechRecognizer.ContinuousRecognitionSession.StartAsync();
             }
         }
 
