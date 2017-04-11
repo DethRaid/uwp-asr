@@ -13,7 +13,14 @@
         <ListView x:Name="topicsChecklist" HorizontalAlignment="Left" Height="241" Margin="10,45,0,0" VerticalAlignment="Top" Width="340" ItemClick="topicsChecklist_ItemClick" IsItemClickEnabled="True">
 
         </ListView>
-        <Button x:Name="addTopicButton" Content="Add new topic" HorizontalAlignment="Left" Margin="190,291,0,0" VerticalAlignment="Top" Width="160" Height="53" Click="addTopicButton_Click" FontSize="18"/>
+        <Button x:Name="addTopicButton" HorizontalAlignment="Left" Margin="190,291,0,0" VerticalAlignment="Top" Width="160" Height="53" Click="addTopicButton_Click" FontSize="18">
+            <Canvas>
+                <TextBlock Canvas.Left="-44" Canvas.Top="-13">
+                    <Run Text="Add new topic"/>
+                </TextBlock>
+                <SymbolIcon Symbol="Add" Canvas.Left="-73" Canvas.Top="-10"/>
+            </Canvas>
+        </Button>
         <Button x:Name="clearSelectedButton" Content="Clear checked topics" HorizontalAlignment="Left" Margin="10,291,0,0" VerticalAlignment="Top" Width="175" Height="53" FontSize="18" Click="clearSelectedButton_Click"/>
     </Grid>
 </Page>

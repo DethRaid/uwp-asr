@@ -10,12 +10,24 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="pageTitle" HorizontalAlignment="Left" Margin="10,61,0,0" TextWrapping="Wrap" Text="What topic do you want to talk about?" VerticalAlignment="Top" Height="65" Width="340" FontSize="22"/>
         <TextBox x:Name="spokenText" HorizontalAlignment="Left" Margin="10,210,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="34" Width="340"/>
-        <Button x:Name="saveButton" Content="Save and go back" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top" Width="166" Height="54" Click="saveButton_Click"/>
-        <Button x:Name="saveAndAddAnother" Content="Save and add another" HorizontalAlignment="Left" Margin="181,315,0,0" VerticalAlignment="Top" Height="54" Click="saveAndAddAnother_Click" Width="169"/>
+        <Button x:Name="saveButton" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top" Width="155" Height="54" Click="saveButton_Click">
+            <Canvas>
+                <SymbolIcon Symbol="Back" Canvas.Left="-71" Canvas.Top="-10"/>
+                <TextBlock Canvas.Left="-48" Canvas.Top="-11">Save and go back</TextBlock>
+            </Canvas>
+        </Button>
+        <Button x:Name="saveAndAddAnother" HorizontalAlignment="Left" Margin="170,315,0,0" VerticalAlignment="Top" Height="54" Click="saveAndAddAnother_Click" Width="180">
+            <Canvas>
+                <SymbolIcon Symbol="Add" Canvas.Left="-83" Canvas.Top="-10"/>
+                <TextBlock Canvas.Left="-59" Canvas.Top="-11">Save and add another</TextBlock>
+            </Canvas>
+        </Button>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,249,0,0" TextWrapping="Wrap" Text="If that's not correct, just type the correct topic into the text box above" VerticalAlignment="Top" Width="340"/>
         <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="10,126,0,0" TextWrapping="Wrap" Text="Just say the topic. Don't worry, we're listening" VerticalAlignment="Top" Width="319"/>
         <TextBlock x:Name="listeningOutputTextBox" HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="Listening..." VerticalAlignment="Top" Width="151"/>
-        <Button x:Name="backToChecklistButton" Content="Back to checklist" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="backToChecklistButton_Click"/>
+        <Button x:Name="backToChecklistButton" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="backToChecklistButton_Click">
+            <SymbolIcon Symbol="Back"></SymbolIcon>
+        </Button>
 
     </Grid>
 </Page>
